@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 using System.IO;
-using System.Linq;
+using System.Security.Cryptography;
 using System.Threading;
 
 class FolderSynchronizer
@@ -31,14 +31,25 @@ class FolderSynchronizer
 
         Console.WriteLine("Synchronization started...");
 
-        // Run synchronization loop
-        while (true)
+        // Create a separate thread for synchronization
+        Thread syncThread = new Thread(() =>
         {
-            SynchronizeFolders(sourceFolderPath, replicaFolderPath, logFilePath);
+            while (true)
+            {
+                SynchronizeFolders(sourceFolderPath, replicaFolderPath, logFilePath);
+                Thread.Sleep(synchronizationIntervalSeconds * 1000);
+            }
+        });
 
-            // Sleep for the specified interval before the next synchronization
-            Thread.Sleep(synchronizationIntervalSeconds * 1000);
-        }
+        // Start the synchronization thread
+        syncThread.Start();
+
+        // Allow the user to exit the program by pressing a key
+        Console.WriteLine("Press any key to exit...");
+        Console.ReadKey();
+
+        // Stop the synchronization thread
+        syncThread.Abort();
     }
 
     static void SynchronizeFolders(string sourceFolderPath, string replicaFolderPath, string logFilePath)
@@ -95,24 +106,65 @@ class FolderSynchronizer
             string replicaFilePath = Path.Combine(replicaFolderPath, relativePath);
 
             // Check if the file exists in replica and is different from the source
-            if (File.Exists(replicaFilePath) && File.GetLastWriteTimeUtc(replicaFilePath) != File.GetLastWriteTimeUtc(sourceFile))
+            if (File.Exists(replicaFilePath) && !IsFileContentEqual(sourceFile, replicaFilePath))
             {
                 LogToFile(logFilePath, $"Updating: {relativePath}");
-                File.Copy(sourceFile, replicaFilePath, true);
+                CopyFileWithAttributes(sourceFile, replicaFilePath);
             }
             // If the file does not exist in replica, copy it
             else if (!File.Exists(replicaFilePath))
             {
                 LogToFile(logFilePath, $"Copying: {relativePath}");
-                File.Copy(sourceFile, replicaFilePath);
+                CopyFileWithAttributes(sourceFile, replicaFilePath);
             }
+        }
+    }
+
+    static bool IsFileContentEqual(string filePath1, string filePath2)
+    {
+        string hash1 = CalculateMD5(filePath1);
+        string hash2 = CalculateMD5(filePath2);
+
+        return hash1.Equals(hash2, StringComparison.OrdinalIgnoreCase);
+    }
+
+    static void CopyFileWithAttributes(string sourceFilePath, string destinationFilePath)
+    {
+        using (var sourceStream = new FileStream(sourceFilePath, FileMode.Open, FileAccess.Read))
+        using (var destinationStream = new FileStream(destinationFilePath, FileMode.Create, FileAccess.Write))
+        {
+            // Copy file using a buffer
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            while ((bytesRead = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                destinationStream.Write(buffer, 0, bytesRead);
+            }
+        }
+
+        // Copy file attributes (including permissions and ownership)
+        File.SetAttributes(destinationFilePath, File.GetAttributes(sourceFilePath));
+
+        // Note: This may not handle all edge cases related to file permissions and ownership, depending on the operating system and file system.
+    }
+
+    static string CalculateMD5(string filePath)
+    {
+        using (var md5 = MD5.Create())
+        using (var stream = File.OpenRead(filePath))
+        {
+            byte[] hash = md5.ComputeHash(stream);
+            return BitConverter.ToString(hash).Replace("-", "").ToLower();
         }
     }
 
     static void LogToFile(string logFilePath, string logMessage)
     {
+        // Enhance log entries with timestamps
+        string formattedLog = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {logMessage}";
+
         // Log the message to both the console and the log file
-        Console.WriteLine(logMessage);
-        File.AppendAllText(logFilePath, $"{logMessage}{Environment.NewLine}");
+        Console.WriteLine(formattedLog);
+        File.AppendAllText(logFilePath, $"{formattedLog}{Environment.NewLine}");
     }
 }
