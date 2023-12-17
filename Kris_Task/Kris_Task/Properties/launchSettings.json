@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Kris_Task": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Personal\\Source C:\\Personal\\Replica C:\\Personal\\log.txt"
+    }
+  }
+}

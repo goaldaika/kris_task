@@ -1,0 +1,14 @@
+C:\Users\k\source\repos\Kris_Task\Kris_Task\bin\Debug\net8.0\Kris_Task.exe
+C:\Users\k\source\repos\Kris_Task\Kris_Task\bin\Debug\net8.0\Kris_Task.deps.json
+C:\Users\k\source\repos\Kris_Task\Kris_Task\bin\Debug\net8.0\Kris_Task.runtimeconfig.json
+C:\Users\k\source\repos\Kris_Task\Kris_Task\bin\Debug\net8.0\Kris_Task.dll
+C:\Users\k\source\repos\Kris_Task\Kris_Task\bin\Debug\net8.0\Kris_Task.pdb
+C:\Users\k\source\repos\Kris_Task\Kris_Task\obj\Debug\net8.0\Kris_Task.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\k\source\repos\Kris_Task\Kris_Task\obj\Debug\net8.0\Kris_Task.AssemblyInfoInputs.cache
+C:\Users\k\source\repos\Kris_Task\Kris_Task\obj\Debug\net8.0\Kris_Task.AssemblyInfo.cs
+C:\Users\k\source\repos\Kris_Task\Kris_Task\obj\Debug\net8.0\Kris_Task.csproj.CoreCompileInputs.cache
+C:\Users\k\source\repos\Kris_Task\Kris_Task\obj\Debug\net8.0\Kris_Task.dll
+C:\Users\k\source\repos\Kris_Task\Kris_Task\obj\Debug\net8.0\refint\Kris_Task.dll
+C:\Users\k\source\repos\Kris_Task\Kris_Task\obj\Debug\net8.0\Kris_Task.pdb
+C:\Users\k\source\repos\Kris_Task\Kris_Task\obj\Debug\net8.0\Kris_Task.genruntimeconfig.cache
+C:\Users\k\source\repos\Kris_Task\Kris_Task\obj\Debug\net8.0\ref\Kris_Task.dll
